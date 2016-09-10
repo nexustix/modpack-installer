@@ -227,6 +227,7 @@ start_button.innerHTML = "________";
 setModpackName(packName);
 setModpackDescription(packDescription);
 //setModpackImage("http://www.w3schools.com/html/pic_mountain.jpg");
+setModpackImage("https://raw.githubusercontent.com/nexustix/mc-modpack-test/master/Adamantine/other/Adamantine.png");
 setProgress("");
 
 //getModpack('AdamantineTest','https://raw.githubusercontent.com/nexustix/mc-modpack-test/master/Adamantine/nxreplicator/bulks/Adamantine_0.nxrb');
