@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.flex-container {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    text-align: center;
+}
+
+.flex-container > * {
+    padding: 15px;
+    -webkit-flex: 1 100%;
+    flex: 1 100%;
+}
+
+.article {
+    background: #F8D7B8;
+    text-align: left;
+}
+
+.cake {
+    background: #413F46;
+    text-align: right;
+    min-width: 400;
+    min-height: 400;
+}
+
+header {
+    background: #4CAF50;
+    color:white;
+}
+footer {
+    background: #F44336;
+    color:white;
+}
+.nav {
+    background:#4CAF50;
+}
+
+.nav ul {
+    list-style-type: none;
+	padding: 0;
+}
+
+.nav ul a {
+	text-decoration: none;
+}
+
+@media all and (min-width: 768px) {
+    .nav {
+        text-align:left;
+        -webkit-flex: 1 auto;
+        flex:1 auto;
+        -webkit-order:1;
+        order:1;
+    }
+
+    .article {
+        -webkit-flex:5 0px;
+        flex:5 0px;
+        -webkit-order:2;
+        order:2;
+    }
+    .cake {
+        -webkit-flex:5 0px;
+        flex:5 0px;
+        -webkit-order:2;
+        order:2;
+    }
+
+    footer {
+        -webkit-order:3;
+        order:3;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="flex-container">
+    <header>
+        <!--
+        <h1>Modpack Manager (Experimental)</h1>
+        -->
+        <h1>Modpack Installer (Experimental)</h1>
+    </header>
+
+    <nav class="nav">
+    <ul>
+      <!--
+      <li><a href="#">ONE</a></li>
+      <li><a href="#">TWO</a></li>
+      <li><a href="#">THREE</a></li>
+      -->
+      <!--
+      <li><a href="#">Modpack3000</a></li>
+      -->
+    </ul>
+    </nav>
+
+    <article class="article">
+      <h1 id="modpackName">No modpackName</h1>
+      <p id="modpackDescription">No modpackDescription</p>
+    </article>
+
+    <article class="cake">
+        <img id="modpackImage" src="" alt="No modpackImage" style="width:300px;height:200px;">
+        <button id="getButton" type="button">(re)Get .nxrb</button>
+        <button id="installButton" type="button">(re)Install Modpack</button>
+        <button id="startButton" type="button">Launch Modpack</button>
+    </article>
+
+    <footer id="progress" >[]</footer>
+</div>
+
+    <script>require('./index.js')</script>
+</body>
+</html>
