@@ -8,9 +8,15 @@ var path = require('path');
 var os = require('os');
 var fs = require('fs');
 
-let packName = "AdamantineX"
+function getUserHome() {
+  return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+}
+
+let packName = "AdamantineTest"
 let packURL = "https://raw.githubusercontent.com/nexustix/mc-modpack-test/master/Adamantine/nxreplicator/bulks/Adamantine_0.nxrb"
 let packDescription = "Tech modpack with modified gameplay-loop.\nAims to make modded-minecraft more enjoyable."
+
+let installDir = getUserHome()+"/.nxreplicator/instances/minecraft/"+packName+"/"
 
 let packNameLabel = document.getElementById("modpackName");
 let packDescriptionLabel = document.getElementById("modpackDescription");
@@ -141,6 +147,7 @@ function installModpack(modpackName, destination) {
 
     bat.on('exit', (code) => {
       console.log(`Child exited with code ${code}`);
+      setProgress("Installation Done")
       setAllButtons(true)
     });
 }
@@ -154,11 +161,6 @@ function fileExists(filename){
     return false;
 }
 
-function getUserHome() {
-  return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
-}
-
-
 get_button.addEventListener('click', () => {
     console.log("get");
     getModpack(packName, packURL);
@@ -166,7 +168,7 @@ get_button.addEventListener('click', () => {
 
 install_button.addEventListener('click', () => {
     console.log("install");
-    installModpack(packName, './instances/'+packName);
+    installModpack(packName, installDir);
 }, false)
 
 start_button.addEventListener('click', () => {
