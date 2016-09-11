@@ -12,9 +12,35 @@ function getUserHome() {
   return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 }
 
-let packName = "AdamantineTest"
+function fileExists(filename){
+    try {
+      stats = fs.statSync(filename);
+      return true;
+    }catch (e) {}
+    return false;
+}
+
+//XXX 3rd
+deleteFolderRecursive = function(path) {
+    var files = [];
+    if( fs.existsSync(path) ) {
+        files = fs.readdirSync(path);
+        files.forEach(function(file,index){
+            var curPath = path + "/" + file;
+            if(fs.lstatSync(curPath).isDirectory()) { // recurse
+                deleteFolderRecursive(curPath);
+            } else { // delete file
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
+};
+
+let packName = "AdamantineAlpha"
 let packURL = "https://raw.githubusercontent.com/nexustix/mc-modpack-test/master/Adamantine/nxreplicator/bulks/Adamantine_0.nxrb"
-let packDescription = "Tech modpack with modified gameplay-loop.\nAims to make modded-minecraft more enjoyable."
+let packDescription = "Tech modpack with modified gameplay-loop.\
+                    \nAims to make modded-Minecraft more enjoyable by tweaking Risk/Reward factors."
 
 let installDir = getUserHome()+"/.nxreplicator/instances/minecraft/"+packName+"/"
 
@@ -25,7 +51,7 @@ let progressLabel = document.getElementById("progress");
 
 let get_button = document.getElementById("getButton");
 let install_button = document.getElementById("installButton");
-let start_button = document.getElementById("startButton");
+let clean_button = document.getElementById("startButton");
 
 
 let nofnString = ""
@@ -40,7 +66,7 @@ let mcinterfaceCommand = ""
 function setAllButtons(buttonState){
     get_button.disabled = !buttonState;
     install_button.disabled = !buttonState;
-    //start_button.disabled = !buttonState;
+    clean_button.disabled = !buttonState;
 }
 
 function setModpackName(packName){
@@ -97,14 +123,8 @@ function getModpack(modpackName, modpackURL) {
     const bat = spawn(nxreplicatorCommand,['get',modpackName, modpackURL] );
 
     bat.stdout.on('data', (data) => {
-        var tmpString = String(data)
-        if (tmpString.indexOf(' of ') >= 0){
-            console.log(String(data));
-        }
-      //console.log(String(data));
-      //alert(String(data))
-      segments = String(data).split("<->");
-      setProgress(segments[segments.length-1])
+        console.log(String(data));
+        setProgress(String(data))
     });
 
     bat.stderr.on('data', (data) => {
@@ -114,6 +134,23 @@ function getModpack(modpackName, modpackURL) {
     bat.on('exit', (code) => {
       console.log(`Child exited with code ${code}`);
       setAllButtons(true)
+    });
+}
+
+function setupProfile(){
+    const bat = spawn(mcinterfaceCommand,['setupprofile', packName, "1.10", installDir] );
+
+    bat.stdout.on('data', (data) => {
+        console.log(String(data));
+        setProgress(String(data))
+    });
+
+    bat.stderr.on('data', (data) => {
+        console.log(String(data));
+    });
+
+    bat.on('exit', (code) => {
+        console.log(`Child exited with code ${code}`);
     });
 }
 
@@ -147,18 +184,19 @@ function installModpack(modpackName, destination) {
 
     bat.on('exit', (code) => {
       console.log(`Child exited with code ${code}`);
+      setupProfile()
       setProgress("Installation Done")
       setAllButtons(true)
     });
 }
 
-
-function fileExists(filename){
-    try {
-      stats = fs.statSync(filename);
-      return true;
+function cleanModpack(){
+    setAllButtons(false)
+    try{
+        deleteFolderRecursive(installDir+"config")
+        deleteFolderRecursive(installDir+"mods")
     }catch (e) {}
-    return false;
+    setAllButtons(true)
 }
 
 get_button.addEventListener('click', () => {
@@ -171,8 +209,9 @@ install_button.addEventListener('click', () => {
     installModpack(packName, installDir);
 }, false)
 
-start_button.addEventListener('click', () => {
-    console.log("start");
+clean_button.addEventListener('click', () => {
+    console.log("clean");
+    cleanModpack()
     //installModpack('AdamantineTest', './instances/cake');
 }, false)
 
@@ -213,6 +252,12 @@ if( fileExists(bulkPath) ){
 }else{
     install_button.disabled = true
 }
+
+if (fileExists(installDir)){
+    clean_button.disabled = false
+}else{
+    clean_button.disabled = true
+}
 //alert(getUserHome())
 /*
 if ( == "win32"){
@@ -223,9 +268,9 @@ if ( == "win32"){
 */
 
 //setAllButtons(false)
-start_button.disabled = true;
-//start_button.innerHTML = "Launch Modpack";
-start_button.innerHTML = "________";
+//clean_button.disabled = true;
+//clean_button.innerHTML = "Launch Modpack";
+//clean_button.innerHTML = "________";
 setModpackName(packName);
 setModpackDescription(packDescription);
 //setModpackImage("http://www.w3schools.com/html/pic_mountain.jpg");
