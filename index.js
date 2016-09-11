@@ -247,6 +247,15 @@ if (nxreplicatorCommand == "") {
 
 let bulkPath = getUserHome()+"/.nxreplicator/bulks/"+packName+".nxrb"
 
+clean_button.style.background='#F69C55'
+clean_button.style.color='#000000'
+
+install_button.style.background='#4CAF50'
+install_button.style.color='#000000'
+
+get_button.style.background='#4CAF50'
+get_button.style.color='#000000'
+
 if( fileExists(bulkPath) ){
     install_button.disabled = false
 }else{
