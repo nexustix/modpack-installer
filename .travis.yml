@@ -1,0 +1,20 @@
+language: node_js
+node_js:
+    - "node"
+before_deploy:
+    - npm install
+    - npm install electron-packager -g
+    - sudo apt-get install wine
+    - cd ../
+    - electron-packager ./modpack-installer modpack-installer --platform=win32 --arch=x64
+    - mkdir ${HOME}/dist
+    - zip -r ${HOME}/dist/win64.zip ./modpack-installer-win32-x64/*
+deploy:
+  provider: releases
+  api_key:
+    secure: U6Zq0c+6tyMZG4sHapNMdZFtUTgcFM2Qg78sStUncYut+ZXJKsnsoAD8oOeYXAL+/vDaGuSzd2HWqNkuW7p80/wfdwXi/PRVadPhZ5ZFmcFr6Z9/pIeqXF0wkeD1CCAT2dGJKbjFUnI33ufTcDt/l364PhyVSg9kiyCUWI7Tb3787SEnW1TBiW1lmaih+mw1p0+glR6o13a4TsaTz6JHTmYUxUjriPzliSJjoyKVrw31FPOKuQVozl87jSKbLaEPxbMug/hMB9y4kxitWwcI7OLXXj6ZAJ+6gDAzFl/uMRUDW4eRCrc22jJ7PI7bovEW4o0Pz1eB1RNBeFg6iYhT7sTM1atjRUwbhp/sjXfWGCHxs2wq8vLIVAaBn79OGc/2MPZPdhn19NtuP04PggQd9yqPTz121sSsEM/q335RkYVr1uJmoxGnsHPdlYtm7kgPzA3ykFNEq20J0DRVpqxOlU1Y85QrnVaI5IgBHcznJs2s+DZhH8sZgVXOYJtCpcrIPZn9pRAWGXKcUsg7/6ywtUWFMlHVyZ1XNWbjJ8C23rNDrWCB0I7ogIjMI0dnOXCDyGR07er+B4gaqyABzqIfz8BLJxS+I9GN6eKR3sV2g/I1QQaAw+HkFs4ZwmL3Kpchye8YfEijyl7Ua8+bd1mB1/ia5oA6rpL+c6xzzH9HtI4=
+  file:
+    - "${HOME}/dist/win64.zip"
+  skip_cleanup: true
+  on:
+    tags: true
